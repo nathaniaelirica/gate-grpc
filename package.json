@@ -1,7 +1,7 @@
 {
   "dependencies": {
+    "@grpc/grpc-js": "^1.8.13",
     "@grpc/proto-loader": "^0.7.7",
-    "grpc": "^1.24.11",
     "mssql": "^9.1.1"
   },
   "scripts": {
@@ -10,7 +10,6 @@
   "name": "gate-grpc",
   "version": "1.0.0",
   "main": "client.js",
-  "devDependencies": {},
   "author": "",
   "license": "ISC",
   "description": ""

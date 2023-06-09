@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package gate;
+
+service GateService {
+    rpc masuk(MasukRequest) returns (MasukResponse) {}
+    rpc keluar(KeluarRequest) returns (KeluarResponse) {}
+}
+
+message MasukRequest {
+  string idKartuAkses = 1;
+  string idRegisterGate = 2;
+}
+
+message MasukResponse {
+  int32 response = 1;
+}
+
+message KeluarRequest {
+    string idKartuAkses = 1;
+    string idRegisterGate = 2;
+  }
+  
+  message KeluarResponse {
+    int32 response = 1;
+  }

@@ -107,28 +107,54 @@ function keluar(call, callback) {
 
 // Fungsi untuk mencatat data ke tabel log_masuk
 function logMasuk(idKartuAkses, idRegisterGate, response, callback) {
-  const insertQuery = `INSERT INTO log_masuk (id_kartu_akses, id_register_gate, is_valid) VALUES ('${idKartuAkses}', '${idRegisterGate}', '${response}')`;
-  mssql.query(insertQuery, (err) => {
-    if (err) {
-      console.error("Error:", err);
-      callback(err, null);
-    } else {
-      callback(null, { response: response });
-    }
-  });
-}
-
-function logKeluar(idKartuAkses, idRegisterGate, response, callback) {
-  const insertQuery = `INSERT INTO log_keluar (id_kartu_akses, id_register_gate, is_valid) VALUES ('${idKartuAkses}', '${idRegisterGate}', '${response}')`;
-  mssql.query(insertQuery, (err) => {
-    if (err) {
-      console.error("Error:", err);
-      callback(err, null);
-    } else {
-      callback(null, { response: response });
-    }
-  });
-}
+    // Cek apakah id_register_gate ada di tabel register_gate
+    const registerGateQuery = `SELECT * FROM register_gate WHERE id_register_gate = '${idRegisterGate}'`;
+    mssql.query(registerGateQuery, (err, result) => {
+      if (err) {
+        console.error("Error:", err);
+        callback(err, null);
+      } else if (result.recordset.length === 0) {
+        // Jika id_register_gate tidak ditemukan
+        callback(null, { response: 0 });
+      } else {
+        // Catat ke tabel log_masuk dan berikan response 1
+        const insertQuery = `INSERT INTO log_masuk (id_kartu_akses, id_register_gate, is_valid) VALUES ('${idKartuAkses}', '${idRegisterGate}', '${response}')`;
+        mssql.query(insertQuery, (err) => {
+          if (err) {
+            console.error("Error:", err);
+            callback(err, null);
+          } else {
+            callback(null, { response: response });
+          }
+        });
+      }
+    });
+  }
+  
+  function logKeluar(idKartuAkses, idRegisterGate, response, callback) {
+    // Cek apakah id_register_gate ada di tabel register_gate
+    const registerGateQuery = `SELECT * FROM register_gate WHERE id_register_gate = '${idRegisterGate}'`;
+    mssql.query(registerGateQuery, (err, result) => {
+      if (err) {
+        console.error("Error:", err);
+        callback(err, null);
+      } else if (result.recordset.length === 0) {
+        // Jika id_register_gate tidak ditemukan
+        callback(null, { response: 0 });
+      } else {
+        // Catat ke tabel log_keluar dan berikan response 1
+        const insertQuery = `INSERT INTO log_keluar (id_kartu_akses, id_register_gate, is_valid) VALUES ('${idKartuAkses}', '${idRegisterGate}', '${response}')`;
+        mssql.query(insertQuery, (err) => {
+          if (err) {
+            console.error("Error:", err);
+            callback(err, null);
+          } else {
+            callback(null, { response: response });
+          }
+        });
+      }
+    });
+  }  
 
 // Mengaitkan implementasi service dengan definisi protobuf
 server.addService(gateProto.GateService.service, {
